@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,16 +20,15 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Catalog\Test\Handler\ConfigurableProduct;
 
 use Mage\Catalog\Test\Handler\CatalogProductSimple\Curl as ProductCurl;
 use Magento\Mtf\Fixture\FixtureInterface;
-use Magento\Mtf\Config\DataInterface;
-use Magento\Mtf\System\Event\EventManagerInterface;
+use Magento\Mtf\Config;
 use Magento\Mtf\Fixture\FixtureFactory;
 use Mage\Catalog\Test\Fixture\ConfigurableProduct;
 use Magento\Mtf\Util\Protocol\CurlTransport\BackendDecorator;
@@ -51,16 +50,12 @@ class Curl extends ProductCurl implements ConfigurableProductInterface
 
     /**
      * @constructor
-     * @param DataInterface $configuration
-     * @param EventManagerInterface $eventManager
+     * @param Config $configuration
      * @param FixtureFactory $fixtureFactory
      */
-    public function __construct(
-        DataInterface $configuration,
-        EventManagerInterface $eventManager,
-        FixtureFactory $fixtureFactory
-    ) {
-        parent::__construct($configuration, $eventManager);
+    public function __construct(Config $configuration, FixtureFactory $fixtureFactory)
+    {
+        parent::__construct($configuration);
 
         $this->fixtureFactory = $fixtureFactory;
         $this->mappingData += [
@@ -141,14 +136,11 @@ class Curl extends ProductCurl implements ConfigurableProductInterface
 
         preg_match_all('/class="value-json" value="(.*)"/', $response, $tempResult);
         $valueIndexes = [];
-        krsort($tempResult[1]);
-        $optionIndex = 0;
-        foreach ($tempResult[1] as $value) {
+        foreach ($tempResult[1] as $index => $value) {
             $arrayResult = json_decode(str_replace('&quot;', '"', $value), true);
             foreach ($arrayResult as $key => $item) {
-                $valueIndexes['attribute_key_' . $key . ':' . 'option_key_' . $optionIndex] = $item['value_index'];
+                $valueIndexes['attribute_key_' . $key . ':' . 'option_key_' . $index] = $item['value_index'];
             }
-            $optionIndex++;
         }
 
         return $valueIndexes;

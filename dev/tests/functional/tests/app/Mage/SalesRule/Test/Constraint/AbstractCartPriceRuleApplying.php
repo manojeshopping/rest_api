@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\SalesRule\Test\Constraint;
@@ -153,9 +153,9 @@ abstract class AbstractCartPriceRuleApplying extends AbstractConstraint
      * @param Address $address
      * @param Browser $browser
      * @param array $productQuantity
+     * @param array $shipping
      * @param CatalogProductSimple $productForSalesRule1
      * @param CatalogProductSimple $productForSalesRule2
-     * @param array $shipping [optional]
      * @param int|null $isLoggedIn
      * @return void
      *
@@ -173,9 +173,9 @@ abstract class AbstractCartPriceRuleApplying extends AbstractConstraint
         Address $address,
         Browser $browser,
         array $productQuantity,
+        array $shipping,
         CatalogProductSimple $productForSalesRule1,
         CatalogProductSimple $productForSalesRule2,
-        array $shipping = [],
         $isLoggedIn = null
     ) {
         $this->checkoutCart = $checkoutCart;
@@ -193,9 +193,7 @@ abstract class AbstractCartPriceRuleApplying extends AbstractConstraint
         $this->addProductsToCart($productQuantity);
         if ($address->hasData('country_id')) {
             $this->checkoutCart->getShippingBlock()->fillEstimateShippingAndTax($address);
-            if (!empty($shipping)) {
-                $this->checkoutCart->getShippingBlock()->selectShippingMethod($shipping);
-            }
+            $this->checkoutCart->getShippingBlock()->selectShippingMethod($shipping);
         }
         if ($salesRule->getCouponCode()) {
             $this->checkoutCart->getDiscountCodesBlock()->applyCouponCode($salesRule->getCouponCode());
@@ -241,7 +239,7 @@ abstract class AbstractCartPriceRuleApplying extends AbstractConstraint
     protected function getTotals()
     {
         $totals = [];
-        $totals['subtotal'] = $this->checkoutCart->getTotalsBlock()->getData('subtotal');
+        $totals['subtotal'] =  $this->checkoutCart->getTotalsBlock()->getData('subtotal');
         $totals['grandTotal'] = $this->checkoutCart->getTotalsBlock()->getData('grand_total');
         if ($this->checkoutCart->getTotalsBlock()->isVisibleShippingPriceBlock()) {
             $shippingPrice = $this->checkoutCart->getTotalsBlock()->getData('shipping_price');

@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Checkout\Test\Block;
@@ -86,13 +86,6 @@ class Cart extends Block
      * @var string
      */
     protected $updateShoppingCart = '.button2.btn-update:not([style="visibility:hidden;"])';
-
-    /**
-     * Checkout with multi shipping link selector.
-     *
-     * @var string
-     */
-    protected $checkoutWithMultiAddress = '.method-checkout-cart-methods-multishipping a';
 
     /**
      * Get cart item block.
@@ -182,25 +175,5 @@ class Cart extends Block
     public function updateShoppingCart()
     {
         $this->_rootElement->find($this->updateShoppingCart)->click();
-    }
-
-    /**
-     * Click on 'Checkout with Multiple Addresses' link.
-     *
-     * @return void
-     */
-    public function clickCheckoutWithMultiAddress()
-    {
-        $this->_rootElement->find($this->checkoutWithMultiAddress)->click();
-    }
-
-    /**
-     * Check that empty cart block is visible.
-     *
-     * @return bool
-     */
-    public function emptyCartBlockIsVisible()
-    {
-        return $this->_rootElement->find($this->emptyShoppingCart)->isVisible();
     }
 }

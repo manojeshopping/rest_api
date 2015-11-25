@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Catalog\Test\Constraint;
@@ -43,7 +43,7 @@ class AssertCategoryAbsenceOnFrontend extends AbstractConstraint
     /**
      * Message on the category page 404.
      */
-    const NOT_FOUND_MESSAGE = 'The page you requested was not found, and we have a fine guess why.';
+    const NOT_FOUND_MESSAGE = 'WE ARE SORRY, BUT THE PAGE YOU ARE LOOKING FOR CANNOT BE FOUND.';
 
     /**
      * Assert category is not present on frontend.
@@ -51,19 +51,16 @@ class AssertCategoryAbsenceOnFrontend extends AbstractConstraint
      * @param Browser $browser
      * @param CatalogCategoryView $categoryView
      * @param CatalogCategory $category
-     * @param string|null $notFoundMessage
      * @return void
      */
     public function processAssert(
         Browser $browser,
         CatalogCategoryView $categoryView,
-        CatalogCategory $category,
-        $notFoundMessage = null
+        CatalogCategory $category
     ) {
         $browser->open($_ENV['app_frontend_url'] . $category->getUrlKey() . '.html');
-        $notFoundMessage = ($notFoundMessage !== null) ? $notFoundMessage : self::NOT_FOUND_MESSAGE;
         \PHPUnit_Framework_Assert::assertContains(
-            $notFoundMessage,
+            self::NOT_FOUND_MESSAGE,
             $categoryView->getViewBlock()->getText(),
             'Category is present on frontend.'
         );

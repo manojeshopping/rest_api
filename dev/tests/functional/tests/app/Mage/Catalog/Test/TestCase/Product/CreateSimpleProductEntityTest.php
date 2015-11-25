@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Catalog\Test\TestCase\Product;
@@ -33,9 +33,6 @@ use Mage\Catalog\Test\Page\Adminhtml\CatalogProductNew;
 use Mage\Catalog\Test\Page\Adminhtml\CatalogProduct;
 
 /**
- * Preconditions:
- * 1. Setup configuration.
- *
  * Steps:
  * 1. Login to the backend.
  * 2. Navigate to Catalog > Manage Products.
@@ -95,34 +92,14 @@ class CreateSimpleProductEntityTest extends Injectable
      *
      * @param CatalogProductSimple $product
      * @param CatalogCategory $category
-     * @param string $configData
      * @return void
      */
-    public function test(CatalogProductSimple $product, CatalogCategory $category, $configData)
+    public function test(CatalogProductSimple $product, CatalogCategory $category)
     {
-        // Preconditions
-        $this->objectManager->create(
-            'Mage\Core\Test\TestStep\SetupConfigurationStep',
-            ['configData' => $configData]
-        )->run();
-
         // Steps
         $this->productGrid->open();
         $this->productGrid->getGridPageActionBlock()->addNew();
         $this->newProductPage->getProductForm()->fill($product, null, $category);
         $this->newProductPage->getFormPageActions()->save();
-    }
-
-    /**
-     * Disable enabled config after test.
-     *
-     * @return void
-     */
-    public function tearDown()
-    {
-        $this->objectManager->create(
-            'Mage\Core\Test\TestStep\SetupConfigurationStep',
-            ['configData' => $this->currentVariation['arguments']['configData'], 'rollback' => true]
-        )->run();
     }
 }

@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,14 +20,13 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Admin\Test\Constraint;
 
 use Mage\Admin\Test\Fixture\User;
-use Magento\Mtf\Client\Browser;
 use Magento\Mtf\Constraint\AbstractConstraint;
 use Mage\Adminhtml\Test\Page\Adminhtml\Dashboard;
 use Mage\Adminhtml\Test\Page\AdminAuthLogin;
@@ -50,44 +49,24 @@ class AssertUserSuccessLogin extends AbstractConstraint
      * @param User $user
      * @param AdminAuthLogin $adminAuth
      * @param Dashboard $dashboard
-     * @param Browser $browser
      * @param User $customAdmin
-     * @param array $install [optional]
      * @return void
      */
     public function processAssert(
         User $user,
         AdminAuthLogin $adminAuth,
         Dashboard $dashboard,
-        Browser $browser,
-        User $customAdmin = null,
-        $install = []
+        User $customAdmin = null
     ) {
         $adminUser = $customAdmin === null ? $user : $customAdmin;
         $adminPanelHeader = $dashboard->getAdminPanelHeader();
         if ($adminPanelHeader->isVisible()) {
             $adminPanelHeader->logOut();
         }
-        if (!$adminAuth->getLoginBlock()->isVisible()) {
-            $this->checkForInstallData($browser, $install);
-        }
+
         $adminAuth->getLoginBlock()->loginToAdminPanel($adminUser->getData());
 
         \PHPUnit_Framework_Assert::assertTrue($adminPanelHeader->isVisible(), 'Admin user was not logged in.');
-    }
-
-    /**
-     * Determines if assert is called after magento installation and performs assert precondition.
-     *
-     * @param Browser $browser
-     * @param array $install
-     * @return void
-     */
-    protected function checkForInstallData(Browser $browser, array $install)
-    {
-        isset($install['admin_frontname'])
-            ? $browser->open($_ENV['app_frontend_url'] . $install['admin_frontname'])
-            : $browser->open($_ENV['app_backend_url']);
     }
 
     /**

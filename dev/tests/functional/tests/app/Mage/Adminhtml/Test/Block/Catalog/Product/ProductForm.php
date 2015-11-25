@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Adminhtml\Test\Block\Catalog\Product;
@@ -30,7 +30,7 @@ use Mage\Catalog\Test\Fixture\CatalogProductAttribute;
 use Magento\Mtf\Client\Element\SimpleElement as Element;
 use Mage\Adminhtml\Test\Block\Widget\FormTabs;
 use Magento\Mtf\Client\Locator;
-use Magento\Mtf\Fixture\FixtureInterface;
+use Magento\Mtf\Fixture\InjectableFixture;
 use Mage\Catalog\Test\Fixture\CatalogCategory;
 use Mage\Adminhtml\Test\Block\Widget\Tab;
 use Mage\Adminhtml\Test\Block\Template;
@@ -54,7 +54,7 @@ class ProductForm extends FormTabs
      *
      * @var string
      */
-    protected $attribute = './/td[1][contains(., "%s")]';
+    protected $attribute = './/label[contains(., "%s")]';
 
     /**
      * Attribute set on the Product page.
@@ -94,14 +94,14 @@ class ProductForm extends FormTabs
     /**
      * Fill the product form.
      *
-     * @param FixtureInterface $product
+     * @param InjectableFixture $product
      * @param Element|null $element [optional]
      * @param CatalogCategory|null $category [optional]
      * @return FormTabs
      *
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function fill(FixtureInterface $product, Element $element = null, CatalogCategory $category = null)
+    public function fill(InjectableFixture $product, Element $element = null, CatalogCategory $category = null)
     {
         $typeId = $this->getProductType($product);
 
@@ -123,43 +123,15 @@ class ProductForm extends FormTabs
     }
 
     /**
-     * Get data of the tabs.
-     *
-     * @param FixtureInterface|null $product
-     * @param Element|null $element
-     * @return array
-     */
-    public function getData(FixtureInterface $product = null, Element $element = null)
-    {
-        $data = parent::getData($product, $element);
-        if ($this->isWebsiteTabVisible() && !isset($data['website_ids'])) {
-            $data['website_ids'] = $this->getWebsiteTabData();
-        }
-
-        return $data;
-    }
-
-    /**
-     * Get data from website tab.
-     *
-     * @return array
-     */
-    protected function getWebsiteTabData()
-    {
-        $this->openTab('websites');
-        return $this->getTabElement('websites')->getData();
-    }
-
-    /**
      * Fill default fields.
      *
-     * @param FixtureInterface $product
+     * @param InjectableFixture $product
      * @param Element|null $element [optional]
      * @param CatalogCategory|null $category [optional]
      * @return void
      */
     protected function fillDefaultFields(
-        FixtureInterface $product,
+        InjectableFixture $product,
         Element $element = null,
         CatalogCategory $category = null
     ) {
@@ -171,11 +143,11 @@ class ProductForm extends FormTabs
     /**
      * Prepare tabs.
      *
-     * @param FixtureInterface $product
+     * @param InjectableFixture $product
      * @param CatalogCategory|null $category
      * @return array
      */
-    protected function prepareTabs(FixtureInterface $product, CatalogCategory $category = null)
+    protected function prepareTabs(InjectableFixture $product, CatalogCategory $category = null)
     {
         $tabs = $this->getFieldsByTabs($product);
         $categories = $this->prepareCategories($product, $category);
@@ -188,12 +160,12 @@ class ProductForm extends FormTabs
     /**
      * Fill websites tab.
      *
-     * @param FixtureInterface $product
+     * @param InjectableFixture $product
      * @return void
      */
-    protected function fillWebsitesTab(FixtureInterface $product)
+    protected function fillWebsitesTab(InjectableFixture $product)
     {
-        if (!$this->isWebsiteTabVisible()) {
+        if (!$this->_rootElement->find($this->websitesTab)->isVisible()) {
             return;
         }
         $data = $product->hasData('website_ids') ? $product->getWebsiteIds() : ['Main Website'];
@@ -202,23 +174,13 @@ class ProductForm extends FormTabs
     }
 
     /**
-     * Check website tab visible.
-     *
-     * @return bool
-     */
-    protected function isWebsiteTabVisible()
-    {
-        return $this->_rootElement->find($this->websitesTab)->isVisible();
-    }
-
-    /**
      * Prepare categories for fill.
      *
-     * @param FixtureInterface $product
+     * @param InjectableFixture $product
      * @param CatalogCategory|null $category
      * @return array
      */
-    protected function prepareCategories(FixtureInterface $product, CatalogCategory $category = null)
+    protected function prepareCategories(InjectableFixture $product, CatalogCategory $category = null)
     {
         return $category
             ? [$category]
@@ -230,10 +192,10 @@ class ProductForm extends FormTabs
     /**
      * Get product type.
      *
-     * @param FixtureInterface $product
+     * @param InjectableFixture $product
      * @return string|null
      */
-    protected function getProductType(FixtureInterface $product)
+    protected function getProductType(InjectableFixture $product)
     {
         $dataConfig = $product->getDataConfig();
         return isset($dataConfig['type_id']) ? $dataConfig['type_id'] : null;
@@ -242,10 +204,10 @@ class ProductForm extends FormTabs
     /**
      * Fill product's settings.
      *
-     * @param FixtureInterface $product
+     * @param InjectableFixture $product
      * @return void
      */
-    protected function fillSettingsTabs(FixtureInterface $product)
+    protected function fillSettingsTabs(InjectableFixture $product)
     {
         if ($this->_rootElement->find($this->settingsTab)->isVisible()) {
             $tabs = $this->prepareSettingsData($product);
@@ -259,10 +221,10 @@ class ProductForm extends FormTabs
     /**
      * Prepare data for settings tabs.
      *
-     * @param FixtureInterface $product
+     * @param InjectableFixture $product
      * @return array
      */
-    protected function prepareSettingsData(FixtureInterface $product)
+    protected function prepareSettingsData(InjectableFixture $product)
     {
         $typeId = $this->getProductType($product);
         $attributeSet = null;
@@ -345,10 +307,10 @@ class ProductForm extends FormTabs
     /**
      * Get require notice attributes.
      *
-     * @param FixtureInterface $product
+     * @param InjectableFixture $product
      * @return array
      */
-    public function getRequireNoticeAttributes(FixtureInterface $product)
+    public function getRequireNoticeAttributes(InjectableFixture $product)
     {
         $data = [];
         $tabs = $this->getFieldsByTabs($product);

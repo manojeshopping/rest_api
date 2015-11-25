@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Tax\Test\TestCase;
@@ -30,6 +30,7 @@ use Mage\Catalog\Test\Fixture\CatalogProductSimple;
 use Mage\CatalogRule\Test\Fixture\CatalogRule;
 use Mage\CatalogRule\Test\Page\Adminhtml\CatalogRuleIndex;
 use Mage\CatalogRule\Test\Page\Adminhtml\CatalogRuleEdit;
+use Mage\Core\Test\Fixture\ConfigData;
 use Mage\Customer\Test\Fixture\Customer;
 use Mage\SalesRule\Test\Fixture\SalesRule;
 use Mage\SalesRule\Test\Page\Adminhtml\PromoQuoteEdit;
@@ -103,16 +104,6 @@ class TaxWithCrossBorderTest extends Injectable
     protected $catalogRuleEdit;
 
     /**
-     * Prepare instance for test.
-     *
-     * @return void
-     */
-    public function __prepare()
-    {
-        $this->objectManager->create('Mage\Tax\Test\TestStep\DeleteAllTaxRulesStep')->run();
-    }
-
-    /**
      * Injection data.
      *
      * @param PromoQuoteIndex $promoQuoteIndex
@@ -133,7 +124,11 @@ class TaxWithCrossBorderTest extends Injectable
         $this->promoQuoteEdit = $promoQuoteEdit;
         $this->catalogRuleIndex = $catalogRuleIndex;
         $this->catalogRuleEdit = $catalogRuleEdit;
+
         $this->fixtureFactory = $fixtureFactory;
+
+        // TODO: Delete this step after fix bug MAGETWO-29331
+        $this->objectManager->create('Mage\Tax\Test\TestStep\DeleteAllTaxRulesStep')->run();
 
         $taxRule = $fixtureFactory->createByCode('taxRule', ['dataSet' => 'cross_border_tax_rule']);
         $taxRule->persist();
@@ -206,20 +201,12 @@ class TaxWithCrossBorderTest extends Injectable
             $this->catalogRule = null;
         }
         $this->objectManager->create('Mage\Tax\Test\TestStep\DeleteAllTaxRulesStep')->run();
-    }
 
-    /**
-     * Rollback default configuration.
-     *
-     * @return void
-     */
-    public static function tearDownAfterClass()
-    {
-        $objectManager = ObjectManager::getInstance();
-        $objectManager->create(
+        // TODO: Move set default configuration and create default tax rule to "tearDownAfterClass" method after fix bug MAGETWO-29331
+        $this->objectManager->create(
             'Mage\Core\Test\TestStep\SetupConfigurationStep',
             ['configData' => 'default_tax_configuration']
         )->run();
-        $objectManager->create('\Mage\Tax\Test\TestStep\CreateTaxRuleStep', ['taxRule' => 'default'])->run();
+        $this->objectManager->create('\Mage\Tax\Test\TestStep\CreateTaxRuleStep', ['taxRule' => 'default'])->run();
     }
 }

@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,14 +20,15 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Sales\Test\Block\Widget\Guest;
 
 use Mage\Customer\Test\Fixture\Customer;
-use Magento\Mtf\Fixture\FixtureInterface;
+use Magento\Mtf\Client\Locator;
+use Magento\Mtf\Fixture\InjectableFixture;
 use Magento\Mtf\Client\Element\SimpleElement;
 use Mage\Sales\Test\Fixture\Order;
 
@@ -53,12 +54,12 @@ class Form extends \Magento\Mtf\Block\Form
     /**
      * Fill the form.
      *
-     * @param FixtureInterface $fixture
+     * @param InjectableFixture $fixture
      * @param SimpleElement|null $element
      * @param bool $isSearchByEmail [optional]
      * @return $this
      */
-    public function fill(FixtureInterface $fixture, SimpleElement $element = null, $isSearchByEmail = true)
+    public function fill(InjectableFixture $fixture, SimpleElement $element = null, $isSearchByEmail = true)
     {
         $data = $this->prepareData($fixture, $isSearchByEmail);
 
@@ -72,11 +73,11 @@ class Form extends \Magento\Mtf\Block\Form
     /**
      * Prepare data.
      *
-     * @param FixtureInterface $fixture
+     * @param InjectableFixture $fixture
      * @param $isSearchByEmail
      * @return array
      */
-    protected function prepareData(FixtureInterface $fixture, $isSearchByEmail)
+    protected function prepareData(InjectableFixture $fixture, $isSearchByEmail)
     {
         /** @var Order $fixture */
         /** @var Customer $customer */

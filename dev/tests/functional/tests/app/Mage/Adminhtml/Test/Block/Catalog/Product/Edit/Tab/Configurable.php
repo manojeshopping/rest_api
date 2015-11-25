@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Adminhtml\Test\Block\Catalog\Product\Edit\Tab;
@@ -31,9 +31,6 @@ use Magento\Mtf\Client\Locator;
 use Mage\Adminhtml\Test\Block\Widget\Tab;
 use Mage\Adminhtml\Test\Block\Catalog\Product\Edit\Tab\Configurable\Grid;
 use Mage\Adminhtml\Test\Block\Catalog\Product\Edit\Tab\Configurable\Attribute;
-use Mage\Adminhtml\Test\Block\Catalog\Product\Edit\Tab\Configurable\QuickCreation;
-use Mage\Adminhtml\Test\Block\Catalog\Product\Edit\Tab\Configurable\NewProductPopup;
-use Mage\Adminhtml\Test\Block\Catalog\Product\Edit\Tab\Configurable\SimpleAssociatedProduct;
 
 /**
  * Product configurable tab.
@@ -53,27 +50,6 @@ class Configurable extends Tab
      * @var string
      */
     protected $itemAttribute = '//li[@class="attribute" and div[normalize-space(text()) = "%s"]]';
-
-    /**
-     * Selector for simple form.
-     *
-     * @var string
-     */
-    protected $simpleForm = '#configurable_simple_form';
-
-    /**
-     * Selector for new product popup.
-     *
-     * @var string
-     */
-    protected $newProductPopup = '[id="page:main-container"]';
-
-    /**
-     * Selector for 'Create Simple Associated Product' block.
-     *
-     * @var string
-     */
-    protected $simpleAssociatedProduct = '.entry-edit fieldset.a-right';
 
     /**
      * Fill data to fields on tab.
@@ -113,7 +89,7 @@ class Configurable extends Tab
      * @param array $attributes
      * @return void
      */
-    public function fillAttributes(array $attributes)
+    protected function fillAttributes(array $attributes)
     {
         foreach ($attributes as $attribute) {
             $this->getItemAttributeForm($attribute['attribute_code'])->fillAttribute($attribute);
@@ -142,7 +118,7 @@ class Configurable extends Tab
      * @param array $products
      * @return void
      */
-    public function selectProducts(array $products)
+    protected function selectProducts(array $products)
     {
         $productGrid = $this->getProductGrid();
         foreach ($products as $product) {
@@ -193,56 +169,6 @@ class Configurable extends Tab
         return $this->blockFactory->create(
             'Mage\Adminhtml\Test\Block\Catalog\Product\Edit\Tab\Configurable\Attribute',
             ['element' => $this->_rootElement->find(sprintf($this->itemAttribute, $key), Locator::SELECTOR_XPATH)]
-        );
-    }
-
-    /**
-     * Unselect all products.
-     *
-     * @return void
-     */
-    public function unselectAllProducts()
-    {
-        $this->getProductGrid()->unselectAllProducts();
-    }
-
-    /**
-     * Get quick creation block.
-     *
-     * @return QuickCreation
-     */
-    public function getQuickCreationBlock()
-    {
-        return $this->blockFactory->create(
-            'Mage\Adminhtml\Test\Block\Catalog\Product\Edit\Tab\Configurable\QuickCreation',
-            ['element' => $this->_rootElement->find($this->simpleForm)]
-        );
-    }
-
-    /**
-     * Get new product popup.
-     *
-     * @return NewProductPopup
-     */
-    public function getNewProductPopup()
-    {
-        $this->browser->selectWindow();
-        return $this->blockFactory->create(
-            'Mage\Adminhtml\Test\Block\Catalog\Product\Edit\Tab\Configurable\NewProductPopup',
-            ['element' => $this->browser->find($this->newProductPopup)]
-        );
-    }
-
-    /**
-     * Get simple associated product block.
-     *
-     * @return SimpleAssociatedProduct
-     */
-    public function getSimpleAssociatedProductBlock()
-    {
-        return $this->blockFactory->create(
-            'Mage\Adminhtml\Test\Block\Catalog\Product\Edit\Tab\Configurable\SimpleAssociatedProduct',
-            ['element' => $this->_rootElement->find($this->simpleAssociatedProduct)]
         );
     }
 }

@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -21,11 +21,12 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/mtf/Magento/Mtf/Repository/etc/repository.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/mtf/Magento/Mtf/Repository/etc/repository.xsd">
     <repository class="Mage\Tax\Test\Repository\TaxRule">
         <dataset name="for_all_states">
             <field name="code" xsi:type="string">TaxIdentifier%isolation%</field>
@@ -36,7 +37,6 @@
             </field>
             <field name="priority" xsi:type="string">0</field>
         </dataset>
-
         <dataset name="cross_border_tax_rule">
             <field name="code" xsi:type="string">TaxIdentifier%isolation%</field>
             <field name="tax_rate" xsi:type="array">
@@ -49,7 +49,6 @@
             <field name="priority" xsi:type="string">0</field>
             <field name="position" xsi:type="string">0</field>
         </dataset>
-
         <dataset name="customer_equals_store_rate">
             <field name="code" xsi:type="string">TaxIdentifier%isolation%</field>
             <field name="tax_rate" xsi:type="array">
@@ -61,7 +60,6 @@
             <field name="priority" xsi:type="string">0</field>
             <field name="position" xsi:type="string">0</field>
         </dataset>
-
         <dataset name="customer_greater_store_rate">
             <field name="code" xsi:type="string">TaxIdentifier%isolation%</field>
             <field name="tax_rate" xsi:type="array">
@@ -73,7 +71,6 @@
             <field name="priority" xsi:type="string">0</field>
             <field name="position" xsi:type="string">0</field>
         </dataset>
-
         <dataset name="customer_less_store_rate">
             <field name="code" xsi:type="string">TaxIdentifier%isolation%</field>
             <field name="tax_rate" xsi:type="array">
@@ -85,45 +82,12 @@
             <field name="priority" xsi:type="string">0</field>
             <field name="position" xsi:type="string">0</field>
         </dataset>
-
         <dataset name="us_tax_rule">
             <field name="code" xsi:type="string">TaxIdentifier%isolation%</field>
             <field name="tax_rate" xsi:type="array">
                 <item name="dataSet" xsi:type="array">
                     <item name="0" xsi:type="string">us_ca_rate_8_25</item>
                     <item name="1" xsi:type="string">us_ny_rate_8_375</item>
-                </item>
-            </field>
-            <field name="priority" xsi:type="string">0</field>
-            <field name="position" xsi:type="string">0</field>
-        </dataset>
-
-        <dataset name="tax_rule_default">
-            <field name="code" xsi:type="string">TaxIdentifier%isolation%</field>
-            <field name="tax_rate" xsi:type="array">
-                <item name="dataSet" xsi:type="array">
-                    <item name="0" xsi:type="string">US-CA-Rate_1</item>
-                </item>
-            </field>
-            <field name="tax_customer_class" xsi:type="array">
-                <item name="dataSet" xsi:type="array">
-                    <item name="0" xsi:type="string">Retail Customer</item>
-                </item>
-            </field>
-            <field name="tax_product_class" xsi:type="array">
-                <item name="dataSet" xsi:type="array">
-                    <item name="0" xsi:type="string">Taxable Goods</item>
-                </item>
-            </field>
-            <field name="priority" xsi:type="string">1</field>
-            <field name="position" xsi:type="string">1</field>
-        </dataset>
-
-        <dataset name="uk_tax_rule">
-            <field name="code" xsi:type="string">TaxIdentifier%isolation%</field>
-            <field name="tax_rate" xsi:type="array">
-                <item name="dataSet" xsi:type="array">
-                    <item name="0" xsi:type="string">uk-full-tax</item>
                 </item>
             </field>
             <field name="priority" xsi:type="string">0</field>

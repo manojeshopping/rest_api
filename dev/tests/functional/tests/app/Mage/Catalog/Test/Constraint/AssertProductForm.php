@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,13 +20,12 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Catalog\Test\Constraint;
 
-use Mage\Catalog\Test\Fixture\CatalogCategory;
 use Magento\Mtf\Constraint\AbstractAssertForm;
 use Magento\Mtf\Fixture\InjectableFixture;
 use Mage\Catalog\Test\Page\Adminhtml\CatalogProduct;
@@ -83,13 +82,6 @@ class AssertProductForm extends AbstractAssertForm
     protected $catalogProductEdit;
 
     /**
-     * Product fixture.
-     *
-     * @var InjectableFixture
-     */
-    protected $product;
-
-    /**
      * Assert form data equals fixture data.
      *
      * @param InjectableFixture $product
@@ -102,7 +94,6 @@ class AssertProductForm extends AbstractAssertForm
         CatalogProduct $productGrid,
         CatalogProductEdit $productPage
     ) {
-        $this->product = $product;
         $this->catalogProductEdit = $productPage;
         $filter = ['sku' => $product->getSku()];
         $productGrid->open();
@@ -135,48 +126,11 @@ class AssertProductForm extends AbstractAssertForm
         if (!empty($this->specialArray)) {
             $data = $this->prepareSpecialPriceArray($data);
         }
-        if (isset($data['category_ids'])) {
-            $data['category_ids'] = $this->getFullPathCategories();
-        }
 
         foreach ($sortFields as $path) {
             $data = $this->sortDataByPath($data, $path);
         }
         return $data;
-    }
-
-    /**
-     * Get full path for all categories.
-     *
-     * @return array
-     */
-    protected function getFullPathCategories()
-    {
-        $result = [];
-        $categories = $this->product->getDataFieldConfig('category_ids')['source']->getCategories();
-        foreach ($categories as $key => $itemCategory) {
-            $fullPath = $this->prepareFullCategoryPath($itemCategory);
-            $result[$key] = implode('/', $fullPath);
-        }
-
-        return $result;
-    }
-
-    /**
-     * Prepare category path.
-     *
-     * @param CatalogCategory $category
-     * @return array
-     */
-    protected function prepareFullCategoryPath(CatalogCategory $category)
-    {
-        $path = [];
-        $parentCategory = $category->getDataFieldConfig('parent_id')['source']->getParentCategory();
-
-        if ($parentCategory != null) {
-            $path = $this->prepareFullCategoryPath($parentCategory);
-        }
-        return array_filter(array_merge($path, [$category->getPath(), $category->getName()]));
     }
 
     /**

@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,16 +20,16 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\SalesRule\Test\Handler\SalesRule;
 
 use Mage\Adminhtml\Test\Fixture\Website;
-use Mage\Adminhtml\Test\Handler\Conditions;
 use Mage\SalesRule\Test\Fixture\SalesRule;
 use Magento\Mtf\Fixture\FixtureInterface;
+use Magento\Mtf\Handler\Curl as AbstractCurl;
 use Magento\Mtf\Util\Protocol\CurlInterface;
 use Magento\Mtf\Util\Protocol\CurlTransport;
 use Magento\Mtf\Util\Protocol\CurlTransport\BackendDecorator;
@@ -37,7 +37,7 @@ use Magento\Mtf\Util\Protocol\CurlTransport\BackendDecorator;
 /**
  * Curl handler for creating sales rule.
  */
-class Curl extends Conditions implements SalesRuleInterface
+class Curl extends AbstractCurl implements SalesRuleInterface
 {
     /**
      * Mapping values for data.
@@ -83,23 +83,6 @@ class Curl extends Conditions implements SalesRuleInterface
     ];
 
     /**
-     * Map of type parameter.
-     *
-     * @var array
-     */
-    protected $mapTypeParams = [
-        'Conditions combination' => [
-            'type' => 'salesrule/rule_condition_combine',
-            'aggregator' => 'all',
-            'value' => '1',
-        ],
-        'Category' => [
-            'type' => 'salesrule/rule_condition_product',
-            'attribute' => 'category_ids',
-        ]
-    ];
-
-    /**
      * Mapping values for customer group.
      *
      * @var array
@@ -124,10 +107,6 @@ class Curl extends Conditions implements SalesRuleInterface
         $data = $this->replaceMappingData($fixture->getData());
         $data['customer_group_ids'] = $this->prepareCustomerGroup($data);
         $data['website_ids'] = $this->prepareWebsiteIds($fixture);
-        if (isset($data['conditions_serialized'])) {
-            $data['rule']['conditions'] = $this->prepareCondition($data['conditions_serialized']);
-            unset($data['conditions_serialized']);
-        }
 
         $curl = new BackendDecorator(new CurlTransport(), $this->_configuration);
         $curl->write(CurlInterface::POST, $url, '1.0', [], $data);

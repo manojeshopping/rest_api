@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,17 +20,15 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Adminhtml\Test\Block\CatalogRule\Promo\Catalog\Edit;
 
 use Mage\Adminhtml\Test\Block\Widget\FormTabs;
-use Mage\CatalogRule\Test\Fixture\CatalogRule;
 use Magento\Mtf\Client\Element\SimpleElement as Element;
-use Magento\Mtf\Client\Locator;
-use Magento\Mtf\Fixture\FixtureInterface;
+use Magento\Mtf\Fixture\InjectableFixture;
 
 /**
  * Form for creation of a Catalog Price Rule.
@@ -38,42 +36,20 @@ use Magento\Mtf\Fixture\FixtureInterface;
 class Form extends FormTabs
 {
     /**
-     * Selector for website field.
-     *
-     * @var string
-     */
-    protected $website = '#rule_website_ids';
-
-    /**
      * Fill form with tabs.
      *
-     * @param FixtureInterface $catalogPriceRule
+     * @param InjectableFixture $fixture
      * @param Element $element [optional]
      * @param array $replace [optional]
      * @return void
      */
-    public function fill(FixtureInterface $catalogPriceRule, Element $element = null, array $replace = null)
+    public function fill(InjectableFixture $fixture, Element $element = null, array $replace = null)
     {
-        $tabs = $this->getFieldsByTabs($catalogPriceRule);
+        $tabs = $this->getFieldsByTabs($fixture);
         if ($replace) {
             $tabs = $this->prepareData($tabs, $replace);
         }
-        $this->fillWebsites($catalogPriceRule);
         $this->fillTabs($tabs, $element);
-    }
-
-    /**
-     * Fill website.
-     *
-     * @param CatalogRule $catalogPriceRule
-     * @return void
-     */
-    protected function fillWebsites(CatalogRule $catalogPriceRule)
-    {
-        $websiteField = $this->_rootElement->find($this->website, Locator::SELECTOR_CSS, 'multiselectlist');
-        if ($websiteField->isVisible() && !$catalogPriceRule->hasData('website_ids')) {
-            $websiteField->setValue('Main Website');
-        }
     }
 
     /**

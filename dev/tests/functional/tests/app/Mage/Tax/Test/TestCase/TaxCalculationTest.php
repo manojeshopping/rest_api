@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Tax\Test\TestCase;
@@ -50,6 +50,11 @@ use Magento\Mtf\ObjectManager;
  */
 class TaxCalculationTest extends Scenario
 {
+    /* tags */
+    const MVP = 'yes';
+    const DOMAIN = 'CS';
+    /* end tags */
+
     /**
      * Delete all tax rules.
      *
@@ -84,21 +89,13 @@ class TaxCalculationTest extends Scenario
         $this->objectManager->create('\Mage\Tax\Test\TestStep\DeleteAllTaxRulesStep')->run();
         $this->objectManager->create('\Mage\SalesRule\Test\TestStep\DeleteAllSalesRuleStep')->run();
         $this->objectManager->create('\Mage\CatalogRule\Test\TestStep\DeleteAllCatalogRulesStep')->run();
-    }
 
-    /**
-     * Setup default configuration after test.
-     *
-     * @return void
-     */
-    public static function tearDownAfterClass()
-    {
-        $objectManager =  ObjectManager::getInstance();
-        $objectManager->create(
+        // TODO: Move set default configuration to "tearDownAfterClass" method after fix bug MAGETWO-29331
+        $this->objectManager->create(
             'Mage\Core\Test\TestStep\SetupConfigurationStep',
             ['configData' => 'default_tax_configuration']
         )->run();
-        $objectManager->create(
+        $this->objectManager->create(
             'Mage\Core\Test\TestStep\SetupConfigurationStep',
             ['configData' => 'shipping_tax_class_taxable_goods', 'rollback' => true]
         )->run();

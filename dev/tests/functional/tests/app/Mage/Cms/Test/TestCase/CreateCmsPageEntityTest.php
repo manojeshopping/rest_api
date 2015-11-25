@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Cms\Test\TestCase;
@@ -35,13 +35,15 @@ use Mage\Adminhtml\Test\Page\Adminhtml\EditStore;
 use Mage\Adminhtml\Test\Page\Adminhtml\DeleteStore;
 
 /**
+ * Test Flow:
+ *
  * Steps:
- * 1. Log in to Backend.
- * 2. Navigate to CMS > Pages > Manage Content.
- * 3. Click "Add New Page" button.
- * 4. Fill data according to data set.
- * 5. Click "Save Page" button.
- * 6. Perform all assertions.
+ * 1. Log in to Backend
+ * 2. Navigate to CMS > Pages > Manage Content
+ * 3. Click "Add New Page" button
+ * 4. Fill data according to data set
+ * 5. Click "Save Page" button
+ * 6. Perform all assertions
  *
  * @group CMS Content (PS)
  * @ZephyrId MPERF-6686

@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Catalog\Test\Fixture\ConfigurableProduct;
@@ -160,117 +160,6 @@ class ConfigurableOptions implements FixtureInterface
                 'attribute_key_0:option_key_1 attribute_key_1:option_key_1' => 'catalogProductSimple::default',
                 'attribute_key_0:option_key_2 attribute_key_1:option_key_2' => 'catalogProductSimple::default',
             ]
-        ],
-        'quickCreation' => [
-            'attributes_data' => [
-                'attribute_key_0' => [
-                    'options' => [
-                        'option_key_0' => [
-                            'price' => 121,
-                            'price_type' => 'Percentage'
-                        ]
-                    ]
-                ],
-                'attribute_key_1' => [
-                    'options' => [
-                        'option_key_0' => [
-                            'price' => 412.00,
-                            'price_type' => 'Fixed'
-                        ]
-                    ]
-                ]
-            ],
-            'products' => [
-                'attribute_key_0:option_key_0 attribute_key_1:option_key_0' => 'catalogProductSimple::quickCreation'
-            ]
-        ],
-        'createEmpty' => [
-            'attributes_data' => [
-                'attribute_key_0' => [
-                    'options' => [
-                        'option_key_1' => [
-                            'price' => 11,
-                            'price_type' => 'Percentage'
-                        ]
-                    ]
-                ],
-                'attribute_key_1' => [
-                    'options' => [
-                        'option_key_1' => [
-                            'price' => 76.00,
-                            'price_type' => 'Fixed'
-                        ]
-                    ]
-                ]
-            ],
-            'products' => [
-                'attribute_key_0:option_key_1 attribute_key_1:option_key_1' => 'catalogProductSimple::withoutPersist'
-            ]
-        ],
-        'copyFromConfigurable' => [
-            'attributes_data' => [
-                'attribute_key_0' => [
-                    'options' => [
-                        'option_key_2' => [
-                            'price' => 33,
-                            'price_type' => 'Percentage'
-                        ]
-                    ]
-                ],
-                'attribute_key_1' => [
-                    'options' => [
-                        'option_key_2' => [
-                            'price' => 62.00,
-                            'price_type' => 'Fixed'
-                        ]
-                    ]
-                ]
-            ],
-            'products' => [
-                'attribute_key_0:option_key_2 attribute_key_1:option_key_2' => 'catalogProductSimple::withoutPersist'
-            ]
-        ],
-        'with_out_of_stock_items' => [
-            'attributeSet' => ['dataSet' => 'custom_attribute_set'],
-            'attributes_data' => [
-                'attribute_key_0' => [
-                    'options' => [
-                        'option_key_0' => [
-                            'price' => 12,
-                            'price_type' => 'Percentage'
-                        ],
-                        'option_key_1' => [
-                            'price' => 20,
-                            'price_type' => 'Percentage'
-                        ],
-                        'option_key_2' => [
-                            'price' => 18,
-                            'price_type' => 'Percentage'
-                        ],
-                    ]
-                ],
-                'attribute_key_1' => [
-                    'options' => [
-                        'option_key_0' => [
-                            'price' => 42.00,
-                            'price_type' => 'Fixed'
-                        ],
-                        'option_key_1' => [
-                            'price' => 40.00,
-                            'price_type' => 'Fixed'
-                        ],
-                        'option_key_2' => [
-                            'price' => 48.00,
-                            'price_type' => 'Fixed'
-                        ],
-                    ]
-                ]
-            ],
-            'products' => [
-                'attribute_key_0:option_key_0 attribute_key_1:option_key_0' => 'catalogProductSimple::out_of_stock',
-                'attribute_key_0:option_key_1 attribute_key_1:option_key_1' => 'catalogProductSimple::out_of_stock',
-                'attribute_key_0:option_key_2 attribute_key_1:option_key_2' => 'catalogProductSimple::out_of_stock',
-            ]
         ]
     ];
 
@@ -285,40 +174,16 @@ class ConfigurableOptions implements FixtureInterface
         $this->fixtureFactory = $fixtureFactory;
         $this->params = $params;
         $preset = [];
-        $isSetData = false;
         if (isset($data['preset'])) {
             $preset = $this->getPreset($data['preset']);
             unset($data['preset']);
         }
-        if (isset($data['data'])) {
-            $this->setData($data['data']);
-            if (isset($data['data']['data'])) {
-                $data = $data['data']['data'];
-                $isSetData = true;
-            }
-            unset($data['data']);
-        }
         $this->data = array_replace_recursive($data, $preset);
+
         if (!empty($this->data)) {
             $this->prepareProducts($this->data);
-            if (!$isSetData) {
-                $this->prepareData();
-            }
+            $this->prepareData();
         }
-    }
-
-    /**
-     * Set data to source properties.
-     *
-     * @param array $data
-     * @return void
-     */
-    protected function setData(array $data)
-    {
-        $this->products = isset($data['assigned_product']) ? $data['assigned_product'] : [];
-        $this->attributesData = isset($data['attributes_data'])
-            ? $data['attributes_data']
-            : [];
     }
 
     /**
@@ -339,25 +204,25 @@ class ConfigurableOptions implements FixtureInterface
      */
     protected function prepareProducts(array $data)
     {
-        if (empty($this->products)) {
-            $attributeSetData = $this->prepareAttributesData($data);
-            foreach ($data['products'] as $key => $product) {
-                if (is_string($product)) {
-                    list($fixture, $dataSet) = explode('::', $product);
-                    $attributeData = ['attributes' => $this->getProductAttributeData($key)];
-                    $product = $this->fixtureFactory->createByCode(
-                        $fixture,
-                        ['dataSet' => $dataSet, 'data' => array_merge($attributeSetData, $attributeData)]
-                    );
-                }
-                if (!$product->hasData('id') && $product->getData('isPersist') !== 'No') {
-                    $product->persist();
-                }
-
-                $this->products[$key] = $product;
-            }
+        if (empty($data['products'])) {
+            return;
         }
-        foreach ($this->products as $key => $product) {
+
+        $attributeSetData = $this->prepareAttributesData($data);
+        foreach ($data['products'] as $key => $product) {
+            if (is_string($product)) {
+                list($fixture, $dataSet) = explode('::', $product);
+                $attributeData = ['attributes' => $this->getProductAttributeData($key)];
+                $product = $this->fixtureFactory->createByCode(
+                    $fixture,
+                    ['dataSet' => $dataSet, 'data' => array_merge($attributeSetData, $attributeData)]
+                );
+            }
+            if (!$product->hasData('id')) {
+                $product->persist();
+            }
+
+            $this->products[$key] = $product;
             $this->data['products'][$key] = $product->getSku();
         }
     }
@@ -372,10 +237,8 @@ class ConfigurableOptions implements FixtureInterface
     {
         $attributeSetData = [];
         if (isset($data['attributeSet'])) {
-            if (!isset($this->attributesData['attributeSet'])) {
-                $this->attributesData['attributeSet'] = $this->createAttributeSet($data['attributeSet']);
-            }
-            if ($this->isSetAttributes()) {
+            $this->attributesData['attributeSet'] = $this->createAttributeSet($data['attributeSet']);
+            if ($this->attributesData['attributeSet']->hasData('assigned_attributes')) {
                 $this->attributesData['attributes'] = $this->attributesData['attributeSet']
                     ->getDataFieldConfig('assigned_attributes')['source']->getAttributes();
             }
@@ -383,17 +246,6 @@ class ConfigurableOptions implements FixtureInterface
         }
 
         return $attributeSetData;
-    }
-
-    /**
-     * Check attributes data in source.
-     *
-     * @return bool
-     */
-    protected function isSetAttributes()
-    {
-        return $this->attributesData['attributeSet']->hasData('assigned_attributes')
-        && !isset($this->attributesData['attributes']);
     }
 
     /**
@@ -479,16 +331,12 @@ class ConfigurableOptions implements FixtureInterface
             'products'
         ];
 
-        foreach ($this->attributesData['attributes'] as $attributeIndex => $attribute) {
+        foreach ($this->attributesData['attributes'] as $attributeKey => $attribute) {
             $attribute = $attribute->getData();
-            $attributeKey = 'attribute_key_' . $attributeIndex;
             $options = [];
-            foreach ($attribute['options'] as $optionIndex => $option) {
+            foreach ($attribute['options'] as $optionKey => $option) {
                 $option['label'] = isset($option['view']) ? $option['view'] : $option['label'];
-                $optionKey = 'option_key_' . $optionIndex;
-                if (isset($this->data['attributes_data'][$attributeKey]['options'][$optionKey])) {
-                    $options[$optionKey] = array_intersect_key($option, array_flip($optionFields));
-                }
+                $options['option_key_' . $optionKey] = array_intersect_key($option, array_flip($optionFields));
             }
             $attribute['options'] = $options;
             $attribute['label'] = isset($attribute['label'])
@@ -496,8 +344,8 @@ class ConfigurableOptions implements FixtureInterface
                 : (isset($attribute['frontend_label']) ? $attribute['frontend_label'] : null);
             $attribute = array_intersect_key($attribute, array_flip($attributeFields));
 
-            $this->data['attributes_data'][$attributeKey] = array_merge_recursive(
-                $this->data['attributes_data'][$attributeKey],
+            $this->data['attributes_data']['attribute_key_' . $attributeKey] = array_merge_recursive(
+                $this->data['attributes_data']['attribute_key_' . $attributeKey],
                 $attribute
             );
         }

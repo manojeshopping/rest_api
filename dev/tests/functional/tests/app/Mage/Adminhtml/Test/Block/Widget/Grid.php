@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Adminhtml\Test\Block\Widget;
@@ -326,7 +326,7 @@ abstract class Grid extends GridPageActions
         $this->resetFilter();
         $this->prepareForSearch($filter);
         $this->_rootElement->find($this->searchButton, Locator::SELECTOR_CSS)->click();
-        $this->getTemplateBlock()->waitLoader();
+        $this->waitLoader();
     }
 
     /**
@@ -341,8 +341,41 @@ abstract class Grid extends GridPageActions
         $rowItem = $this->_rootElement->find($this->rowItem, Locator::SELECTOR_CSS);
         if ($rowItem->isVisible()) {
             $rowItem->find($this->editLink, Locator::SELECTOR_CSS)->click();
+            $this->waitForElement();
         } else {
             throw new \Exception('Searched item was not found.');
+        }
+    }
+
+    /**
+     * Wait loader.
+     *
+     * @return void
+     */
+    protected function waitLoader()
+    {
+        $browser = $this->browser;
+        $selector = $this->loader;
+        $browser->waitUntil(
+            function () use ($browser, $selector) {
+                $productSavedMessage = $browser->find($selector);
+                return $productSavedMessage->isVisible() == false ? true : null;
+            }
+        );
+        $this->getTemplateBlock()->waitLoader();
+    }
+
+    /**
+     * Method that waits for the configured selector using class attributes.
+     */
+    protected function waitForElement()
+    {
+        if (!empty($this->waitForSelector)) {
+            if ($this->waitForSelectorVisible) {
+                $this->getTemplateBlock()->waitForElementVisible($this->waitForSelector, $this->waitForSelectorType);
+            } else {
+                $this->getTemplateBlock()->waitForElementNotVisible($this->waitForSelector, $this->waitForSelectorType);
+            }
         }
     }
 
@@ -369,7 +402,7 @@ abstract class Grid extends GridPageActions
     public function resetFilter()
     {
         $this->_rootElement->find($this->resetButton, Locator::SELECTOR_CSS)->click();
-        $this->getTemplateBlock()->waitLoader();
+        $this->waitLoader();
     }
 
     /**
@@ -477,7 +510,7 @@ abstract class Grid extends GridPageActions
         $sortBlock = $this->_rootElement->find(sprintf($this->sortLink, $field, $sort));
         if ($sortBlock->isVisible()) {
             $sortBlock->click();
-            $this->getTemplateBlock()->waitLoader();
+            $this->waitLoader();
         }
     }
 
@@ -492,7 +525,7 @@ abstract class Grid extends GridPageActions
             return false;
         }
         $this->_rootElement->find($this->actionNextPage)->click();
-        $this->getTemplateBlock()->waitLoader();
+        $this->waitLoader();
         return true;
     }
 

@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Catalog\Test\Block\Product;
@@ -111,13 +111,6 @@ class View extends AbstractConfigureBlock
     protected $addToWishlist = '.link-wishlist';
 
     /**
-     * Css selector for 'Update Wishlist' button.
-     *
-     * @var string
-     */
-    protected $updateWishlist = '[href*="wishlist/index/updateItemOptions"]';
-
-    /**
      * Messages block locator.
      *
      * @var string
@@ -130,13 +123,6 @@ class View extends AbstractConfigureBlock
      * @var string
      */
     protected $clickAddToCompare = '.link-compare';
-
-    /**
-     * Selector for custom information tab's title.
-     *
-     * @var string
-     */
-    protected $customInformationTab = '//ul/li/span[text()="%s"]';
 
     /**
      * Get block price.
@@ -159,18 +145,6 @@ class View extends AbstractConfigureBlock
      */
     public function addToCart(InjectableFixture $product)
     {
-        $this->configureProduct($product);
-        $this->clickAddToCart();
-    }
-
-    /**
-     * Configure product.
-     *
-     * @param InjectableFixture $product
-     * @return void
-     */
-    protected function configureProduct(InjectableFixture $product)
-    {
         /** @var CatalogProductSimple $product */
         $checkoutData = $product->getCheckoutData();
         if (isset($checkoutData['options'])) {
@@ -179,6 +153,7 @@ class View extends AbstractConfigureBlock
         if (isset($checkoutData['qty'])) {
             $this->setQty($checkoutData['qty']);
         }
+        $this->clickAddToCart();
     }
 
     /**
@@ -335,20 +310,12 @@ class View extends AbstractConfigureBlock
      */
     public function addToWishlist(InjectableFixture $product)
     {
-        $this->configureProduct($product);
+        $checkoutData = $product->getCheckoutData();
+        $this->fillOptions($product);
+        if (isset($checkoutData['qty'])) {
+            $this->setQty($checkoutData['qty']);
+        }
         $this->clickAddToWishlist();
-    }
-
-    /**
-     * Update product in Wishlist.
-     *
-     * @param InjectableFixture $product
-     * @return void
-     */
-    public function updateWishlist(InjectableFixture $product)
-    {
-        $this->configureProduct($product);
-        $this->clickUpdateWishlist();
     }
 
     /**
@@ -359,16 +326,6 @@ class View extends AbstractConfigureBlock
     public function clickAddToWishlist()
     {
         $this->_rootElement->find($this->addToWishlist)->click();
-    }
-
-    /**
-     * Click "Update Wishlist" button.
-     *
-     * @return void
-     */
-    protected function clickUpdateWishlist()
-    {
-        $this->_rootElement->find($this->updateWishlist)->click();
     }
 
     /**
@@ -385,16 +342,5 @@ class View extends AbstractConfigureBlock
         );
         $this->_rootElement->find($this->clickAddToCompare, Locator::SELECTOR_CSS)->click();
         $messageBlock->waitSuccessMessage();
-    }
-
-    /**
-     * Open custom information tab.
-     *
-     * @param string $tabName
-     * @return void
-     */
-    public function openCustomInformationTab($tabName)
-    {
-        $this->_rootElement->find(sprintf($this->customInformationTab, $tabName), Locator::SELECTOR_XPATH)->click();
     }
 }

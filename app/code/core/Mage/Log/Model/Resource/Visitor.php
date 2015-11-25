@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Mage
  * @package     Mage_Log
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 
@@ -34,20 +34,6 @@
  */
 class Mage_Log_Model_Resource_Visitor extends Mage_Core_Model_Resource_Db_Abstract
 {
-    /**
-     * Store condition object that know should we log something or not
-     *
-     * @var Mage_Log_Helper_Data
-     */
-    protected $_urlLoggingCondition;
-
-    public function __construct(array $data = array())
-    {
-        parent::__construct();
-        $this->_urlLoggingCondition = isset($data['log_condition'])
-            ? $data['log_condition'] : Mage::helper('log');
-    }
-
     /**
      * Define main table
      *
@@ -104,9 +90,6 @@ class Mage_Log_Model_Resource_Visitor extends Mage_Core_Model_Resource_Db_Abstra
      */
     protected function _beforeSave(Mage_Core_Model_Abstract $visitor)
     {
-        if (!$this->_urlLoggingCondition->isLogEnabled()) {
-            return $this;
-        }
         if (!$visitor->getIsNewVisitor()) {
             $this->_saveUrlInfo($visitor);
         }
@@ -121,25 +104,16 @@ class Mage_Log_Model_Resource_Visitor extends Mage_Core_Model_Resource_Db_Abstra
      */
     protected function _afterSave(Mage_Core_Model_Abstract $visitor)
     {
-        if ($this->_urlLoggingCondition->isLogDisabled()) {
-            return $this;
-        }
         if ($visitor->getIsNewVisitor()) {
-            if ($this->_urlLoggingCondition->isLogEnabled()) {
-                $this->_saveVisitorInfo($visitor);
-                $visitor->setIsNewVisitor(false);
-            }
+            $this->_saveVisitorInfo($visitor);
+            $visitor->setIsNewVisitor(false);
         } else {
-            if ($this->_urlLoggingCondition->isLogEnabled()) {
-                $this->_saveVisitorUrl($visitor);
-                if ($visitor->getDoCustomerLogin() || $visitor->getDoCustomerLogout()) {
-                    $this->_saveCustomerInfo($visitor);
-                }
+            $this->_saveVisitorUrl($visitor);
+            if ($visitor->getDoCustomerLogin() || $visitor->getDoCustomerLogout()) {
+                $this->_saveCustomerInfo($visitor);
             }
-            if ($this->_urlLoggingCondition->isVisitorLogEnabled()) {
-                if ($visitor->getDoQuoteCreate() || $visitor->getDoQuoteDestroy()) {
-                    $this->_saveQuoteInfo($visitor);
-                }
+            if ($visitor->getDoQuoteCreate() || $visitor->getDoQuoteDestroy()) {
+                $this->_saveQuoteInfo($visitor);
             }
         }
         return $this;
@@ -148,15 +122,12 @@ class Mage_Log_Model_Resource_Visitor extends Mage_Core_Model_Resource_Db_Abstra
     /**
      * Perform actions after object load
      *
-     * @param Mage_Core_Model_Abstract $object
+     * @param Varien_Object $object
      * @return Mage_Core_Model_Resource_Db_Abstract
      */
     protected function _afterLoad(Mage_Core_Model_Abstract $object)
     {
         parent::_afterLoad($object);
-        if ($this->_urlLoggingCondition->isLogDisabled()) {
-            return $this;
-        }
         // Add information about quote to visitor
         $adapter = $this->_getReadAdapter();
         $select = $adapter->select()->from($this->getTable('log/quote_table'), 'quote_id')

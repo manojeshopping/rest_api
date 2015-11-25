@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -21,13 +21,13 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../vendor/magento/mtf/etc/pages.xsd">
-    <page name="SitemapNew" area="Adminhtml" mca="sitemap/new" module="Mage_Sitemap">
-        <block name="sitemapForm" class="Mage\Adminhtml\Test\Block\Sitemap\Edit\Form" locator="#add_sitemap_form" strategy="css selector" />
-        <block name="formPageActions" class="Mage\Adminhtml\Test\Block\Sitemap\Edit\FormPageActions" locator=".form-buttons" strategy="css selector" />
-    </page>
+  <page name="SitemapNew" area="Adminhtml" mca="sitemap/new" module="Mage_Sitemap">
+    <block name="sitemapForm" class="Magento\Mtf\Block\Form" locator="#add_sitemap_form" strategy="css selector"/>
+    <block name="formPageActions" class="Mage\Adminhtml\Test\Block\FormPageActions" locator=".form-buttons" strategy="css selector"/>
+  </page>
 </config>

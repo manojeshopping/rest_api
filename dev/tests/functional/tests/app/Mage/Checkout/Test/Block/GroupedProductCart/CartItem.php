@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Checkout\Test\Block\GroupedProductCart;
@@ -34,13 +34,6 @@ use Magento\Mtf\Client\ElementInterface;
  */
 class CartItem extends CheckoutCartItem
 {
-    /**
-     * Selector for product sku.
-     *
-     * @var string
-     */
-    protected $productSku = '.product-cart-sku';
-
     /**
      * Get product price.
      *
@@ -63,7 +56,7 @@ class CartItem extends CheckoutCartItem
      * @param array $data
      * @return void
      */
-    public function setQty($data)
+    public function setQty(array $data)
     {
         foreach ($data as $productSku => $qty) {
             /** @var CheckoutCartItem $cartItem */
@@ -116,54 +109,11 @@ class CartItem extends CheckoutCartItem
         foreach ($this->config['associated_cart_items'] as $cartItem) {
             /** @var CheckoutCartItem $cartItem */
             $result[] = [
-                'title' => strtolower($cartItem->getProductName()),
+                'title' => $cartItem->getProductName(),
                 'value' => $cartItem->getQty(),
             ];
         }
 
         return $result;
-    }
-
-    /**
-     * Get products sku.
-     *
-     * @return array
-     */
-    public function getProductsSku()
-    {
-        $elementsData = [];
-        $elements = $this->_rootElement->getElements($this->productSku);
-        foreach ($elements as $element) {
-            $elementsData[] = str_replace('SKU: ', '', $element->getText());
-        }
-
-        return $elementsData;
-    }
-
-    /**
-     * Get price type.
-     *
-     * @param string $priceType
-     * @return string
-     */
-    public function getCartItemTypePrice($priceType)
-    {
-        $result = [];
-        foreach ($this->config['associated_cart_items'] as $key => $cartItem) {
-            $result[$key] = $cartItem->getCartItemTypePrice($priceType);
-        }
-        return $result;
-    }
-
-    /**
-     * Remove product item from cart.
-     *
-     * @return void
-     */
-    public function removeItem()
-    {
-        foreach ($this->config['associated_cart_items'] as $key => $cartItem) {
-            $this->_rootElement->find($this->removeItem)->click();
-        }
     }
 }

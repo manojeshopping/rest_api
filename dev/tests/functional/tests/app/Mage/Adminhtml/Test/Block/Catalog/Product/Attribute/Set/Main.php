@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Adminhtml\Test\Block\Catalog\Product\Attribute\Set;
@@ -90,11 +90,10 @@ class Main extends Block
             ? $attributeData['attribute_code']
             : strtolower($attributeData['frontend_label']);
 
-        $this->_rootElement->find(sprintf($this->attribute, 'color'), Locator::SELECTOR_XPATH)->click();
+        $target = $this->_rootElement->find(sprintf($this->groups, $attributeGroup), Locator::SELECTOR_XPATH);
         $attributeLocator = sprintf($this->attribute, $attribute);
         $attribute = $this->_rootElement->find($attributeLocator, Locator::SELECTOR_XPATH);
-        $attribute->click();
-        $target = $this->_rootElement->find(sprintf($this->groups, $attributeGroup), Locator::SELECTOR_XPATH);
+
         $attribute->dragAndDrop($target);
     }
 
@@ -116,7 +115,11 @@ class Main extends Block
      */
     public function checkProductAttribute($attributeLabel)
     {
-        $attributeLabelLocator = sprintf($this->attributeLocator, $attributeLabel);
+        $attributeLabelLocator = sprintf(
+            $this->attributeLocator,
+            $attributeLabel
+        );
+
         return $this->_rootElement->find($attributeLabelLocator, Locator::SELECTOR_XPATH)->isVisible();
     }
 

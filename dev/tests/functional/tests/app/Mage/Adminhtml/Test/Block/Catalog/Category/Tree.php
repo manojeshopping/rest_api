@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,13 +20,14 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Adminhtml\Test\Block\Catalog\Category;
 
 use Magento\Mtf\Block\Block;
+use Magento\Mtf\Client\Element\TreeElement;
 use Magento\Mtf\Client\Locator;
 use Mage\Catalog\Test\Fixture\CatalogCategory;
 use Mage\Adminhtml\Test\Block\Template;
@@ -119,9 +120,6 @@ class Tree extends Block
         if (!$fullPath) {
             array_pop($parentPath);
         }
-        if (empty($parentPath)) {
-            return;
-        }
         $path = implode('/', $parentPath);
         $this->expandAllCategories();
         $this->_rootElement->find($this->treeElement, Locator::SELECTOR_CSS, 'tree')->setValue($path);
@@ -157,6 +155,27 @@ class Tree extends Block
     }
 
     /**
+     * Check category name in array.
+     *
+     * @param array $structure
+     * @param array $category
+     * @return bool
+     */
+    protected function inTree(array $structure, array &$category)
+    {
+        $element = array_shift($category);
+        foreach ($structure as $item) {
+            $result = strpos($item['name'], $element);
+            if ($result !== false && !empty($item['subnodes'])) {
+                return $this->inTree($item['subnodes'], $category);
+            } elseif ($result !== false && empty($category)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Check category in category tree.
      *
      * @param CatalogCategory $category
@@ -165,8 +184,19 @@ class Tree extends Block
     public function isCategoryVisible(CatalogCategory $category)
     {
         $categoryPath = $this->prepareFullCategoryPath($category);
-        $categoryPath = implode('/', $categoryPath);
-        return $this->_rootElement->find($this->treeElement, Locator::SELECTOR_CSS, 'tree')
-            ->isElementVisible($categoryPath);
+        /** @var TreeElement $treeElement */
+        $treeElement = $this->_rootElement->find($this->treeElement, Locator::SELECTOR_CSS, 'tree');
+        $structure = $treeElement->getStructure();
+        $result = false;
+        $element = array_shift($categoryPath);
+        foreach ($structure as $item) {
+            $searchResult = strpos($item['name'], $element);
+            if ($searchResult !== false && !empty($item['subnodes'])) {
+                $result = $this->inTree($item['subnodes'], $categoryPath);
+            } elseif ($searchResult !== false && empty($categoryPath)) {
+                $result = true;
+            }
+        }
+        return $result;
     }
 }

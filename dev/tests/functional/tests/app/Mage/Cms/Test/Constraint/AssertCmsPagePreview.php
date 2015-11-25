@@ -1,13 +1,13 @@
 <?php
 /**
- * Magento
+ * Magento Enterprise Edition
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Magento Enterprise Edition End User License Agreement
+ * that is bundled with this package in the file LICENSE_EE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * http://www.magento.com/license/enterprise-edition
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@magento.com so we can send you a copy immediately.
@@ -20,8 +20,8 @@
  *
  * @category    Tests
  * @package     Tests_Functional
- * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license http://www.magento.com/license/enterprise-edition
  */
 
 namespace Mage\Cms\Test\Constraint;
@@ -32,6 +32,7 @@ use Mage\Cms\Test\Fixture\CmsPage;
 use Magento\Mtf\Constraint\AbstractConstraint;
 use Mage\Cms\Test\Page\Adminhtml\CmsPageIndex;
 use Mage\Cms\Test\Page\CmsPage as FrontendCmsPage;
+use Mage\Cms\Test\Page\Adminhtml\CmsPageEdit;
 
 /**
  * Assert that content of created cms page displayed in main content section and equals passed from fixture.
@@ -50,35 +51,28 @@ class AssertCmsPagePreview extends AbstractConstraint
     protected $iFrameSelector = '#preview_iframe';
 
     /**
-     * Loader selector.
-     *
-     * @var string
-     */
-    protected $loader = '#loading_mask_loader';
-
-    /**
      * Assert that content of created cms page displayed in main content section and equals passed from fixture.
      *
      * @param CmsPage $cms
      * @param CmsPageIndex $cmsPageIndex
      * @param FrontendCmsPage $frontendCmsPage
+     * @param CmsPageEdit $cmsPageEdit
      * @param Browser $browser
-     * @param bool $isIFrame [optional]
      * @return void
      */
     public function processAssert(
         CmsPage $cms,
         CmsPageIndex $cmsPageIndex,
         FrontendCmsPage $frontendCmsPage,
-        Browser $browser,
-        $isIFrame = false
+        CmsPageEdit $cmsPageEdit,
+        Browser $browser
     ) {
         $cmsPageIndex->open();
-        $cmsPageIndex->getCmsPageGridBlock()->searchAndReview(['title' => $cms->getTitle()]);
+        $cmsPageIndex->getCmsPageGridBlock()->searchAndOpen(['title' => $cms->getTitle()]);
+        $cmsPageEdit->getPageMainActions()->preview();
         $browser->selectWindow();
-        if ($isIFrame) {
-            $this->switchToFrame($browser);
-        }
+        $frontendCmsPage->getTemplateBlock()->waitLoader();
+        $browser->switchToFrame(new Locator($this->iFrameSelector));
         $element = $browser->find('body');
 
         $fixtureContent = $cms->getContent();
@@ -102,26 +96,6 @@ class AssertCmsPagePreview extends AbstractConstraint
                 );
             }
         }
-        $browser->closeWindow();
-        $browser->selectWindow();
-        $browser->switchToFrame();
-    }
-
-    /**
-     * Switch to frame.
-     *
-     * @param Browser $browser
-     * @return void
-     */
-    protected function switchToFrame(Browser $browser)
-    {
-        $selector = $this->loader;
-        $browser->waitUntil(
-            function () use ($browser, $selector) {
-                return $browser->find($selector)->isVisible() == false ? true : null;
-            }
-        );
-        $browser->switchToFrame(new Locator($this->iFrameSelector));
     }
 
     /**
